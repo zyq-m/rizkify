@@ -17,6 +17,7 @@ import { setItem } from "expo-secure-store";
 
 import api from "@/utils/axios";
 import { socket } from "@/utils/io";
+import { storeData } from "@/utils/asyncStorage";
 
 type LoginForm = {
 	email?: string;
@@ -31,15 +32,14 @@ export default function LoginScreen() {
 		try {
 			const user = await api.post("/auth/login", data);
 
-			setItem("accessToken", user.data.accessToken);
-			setItem("refreshToken", user.data.refreshToken);
+			await storeData("accessToken", user.data.accessToken);
+			await storeData("refreshToken", user.data.refreshToken);
 
 			if (data.email) {
 				setEmail(data.email);
 				setAuth(true); // set true
 				socket.emit("register", data.email);
 			}
-
 			router.replace("/(sidebar)/(tabs)");
 		} catch (error) {
 			console.log(error);
