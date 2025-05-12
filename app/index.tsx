@@ -36,10 +36,12 @@ export default function LoginScreen() {
 			await storeData("refreshToken", user.data.refreshToken);
 
 			if (data.email) {
+				await storeData("email", data.email);
 				setEmail(data.email);
 				setAuth(true); // set true
 				socket.emit("register", data.email);
 			}
+
 			router.replace("/(sidebar)/(tabs)");
 		} catch (error) {
 			console.log(error);
